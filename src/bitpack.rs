@@ -7,7 +7,16 @@ use std::convert::TryInto;
 /// * `n`: A signed integer value
 /// * `width`: the width of a bit field
 pub fn fitss(n: i64, width: u64) -> bool {
-    false
+    // -(1 << (width - 1)) is -2^(width - 1)
+    // (1 << (width - 1)) - 1 is 2^(width - 1) - 1
+    // e.g., if width = 2, then -(1 << (width - 1)) = -2^(2 - 1) = -2
+    // e.g., if width = 2, then (1 << (width - 1)) - 1 = 2^(2 - 1) - 1 = 1
+    if n >= -(1 << (width - 1)) && n <= (1 << (width - 1)) - 1 {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 /// Returns true iff the unsigned value `n` fits into `width` unsigned bits.
@@ -16,7 +25,14 @@ pub fn fitss(n: i64, width: u64) -> bool {
 /// * `n`: An usigned integer value
 /// * `width`: the width of a bit field
 pub fn fitsu(n: u64, width: u64) -> bool {
-    false
+    // (1 << width) - 1 is 2^width - 1
+    // e.g., if width = 2, then (1 << width) - 1 = 2^2 - 1 = 3
+    if n <= (1 << width) - 1 {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 /// Retrieve a signed value from `word`, represented by `width` bits
@@ -74,9 +90,24 @@ pub fn news(word: u64, width: u64, lsb: u64, value: i64) -> Option<u64> {
 
 #[cfg(test)]
 mod tests {
+    use crate::bitpack::fitsu;
+    use crate::bitpack::fitss;
     #[test]
-    fn it_works() {
-        let result = 2 + 2;
-        assert_eq!(result, 4);
+    fn fitss_twobits() {
+        assert_eq!(fitss(-2,2), true);
+        assert_eq!(fitss(-1,2), true);
+        assert_eq!(fitss(0,2), true);
+        assert_eq!(fitss(1,2), true);
+        assert_eq!(fitss(2,2), false);
+        assert_eq!(fitss(3,2), false);
+    }
+    #[test]
+    fn fitsu_twobits() {
+        assert_eq!(fitsu(0,2), true);
+        assert_eq!(fitsu(1,2), true);
+        assert_eq!(fitsu(2,2), true);
+        assert_eq!(fitsu(3,2), true);
+        assert_eq!(fitsu(4,2), false);
+        assert_eq!(fitsu(5,2), false);
     }
 }
