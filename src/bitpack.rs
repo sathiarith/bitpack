@@ -35,6 +35,9 @@ pub fn fitsu(n: u64, width: u64) -> bool {
     }
 }
 
+pub fn check_laws() {
+}
+
 /// Retrieve a signed value from `word`, represented by `width` bits
 /// beginning at least-significant bit `lsb`.
 /// 
