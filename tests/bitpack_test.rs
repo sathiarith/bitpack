@@ -2,6 +2,8 @@
 mod tests {
     use crate::bitpack::fitsu;
     use crate::bitpack::fitss;
+    use rand::Rng;
+    
     #[test]
     fn fitss_twobits() {
         assert_eq!(fitss(-2,2), true);
